@@ -22,7 +22,7 @@ public class MyReactiveRepositoryAdapter implements UserRepository {
 
     @Override
     public Mono<User> findById(Integer id) {
-        return null;
+        return repository.findById(id).map(UserMapper::toUser);
     }
 
     @Override
