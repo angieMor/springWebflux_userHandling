@@ -11,9 +11,18 @@ package co.com.onboard.consumer;
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder(toBuilder = true)
-public class ObjectRequest {
+public class UserResponse {
 
-private String val1;
-private String val2;
+    private UserData data;
+
+    @Getter
+    @Setter
+    public static class UserData {
+
+        private Integer id;
+        private String first_name;
+        private String last_name;
+        private String email;
+    }
 
 }

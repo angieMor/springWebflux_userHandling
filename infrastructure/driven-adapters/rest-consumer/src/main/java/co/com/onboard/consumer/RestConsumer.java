@@ -27,14 +27,15 @@ public class RestConsumer implements ReqresRepository {
         return client.get()
                 .uri(reqresApiUrl + "/api/users/{id}", id)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                .map(object -> {
-                    Map<String, Object> userData = (Map<String, Object>) object.get("data");
+                // Deserialize the HTTP response into a UserResponse object
+                .bodyToMono(UserResponse.class)
+                .map(response -> {
+                    UserResponse.UserData userData = response.getData();
                     return User.builder()
-                            .id((Integer) userData.get("id"))
-                            .firstName((String) userData.get("first_name"))
-                            .lastName((String) userData.get("last_name"))
-                            .email((String) userData.get("email"))
+                            .id(userData.getId())
+                            .firstName(userData.getFirst_name())
+                            .lastName(userData.getLast_name())
+                            .email(userData.getEmail())
                             .build();
                 });
     }

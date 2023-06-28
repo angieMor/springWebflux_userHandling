@@ -19,8 +19,9 @@ public class UserUseCase {
 
     public Mono<User> saveUser(Integer id) {
         return userRepository.findById(id)
-                .flatMap(userFound -> Mono.<User>error(new UserFoundException("User with name "
-                        + userFound.getFirstName() + " " + userFound.getLastName() + " Already exists")))
+                .flatMap(userFound -> Mono.<User>error(new UserFoundException("User with id "
+                                                        + userFound.getId() +  ", already exists. Please provide another id"))
+                )
                 .switchIfEmpty(
                         reqresRepository.findById(id)
                                 .flatMap(Mono::just)
