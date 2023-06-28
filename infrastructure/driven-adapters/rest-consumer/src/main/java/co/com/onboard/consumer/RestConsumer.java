@@ -1,17 +1,15 @@
 package co.com.onboard.consumer;
 
 
-import co.com.onboard.model.reqres.gateways.ReqresRepository;
+import co.com.onboard.model.user.gateways.ReqresRepository;
 import co.com.onboard.model.user.User;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.Map;
 
 @Service

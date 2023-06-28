@@ -1,6 +1,6 @@
 package co.com.onboard.usecase.user;
 
-import co.com.onboard.model.reqres.gateways.ReqresRepository;
+import co.com.onboard.model.user.gateways.ReqresRepository;
 import co.com.onboard.model.user.User;
 import co.com.onboard.model.user.gateways.UserRepository;
 import co.com.onboard.usecase.user.exceptions.UserFoundException;
@@ -9,10 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
-import java.util.HashMap;
-
 
 
 @RequiredArgsConstructor
