@@ -1,19 +1,19 @@
-package co.com.onboard.model.reqres;
-import lombok.Builder;
+package co.com.onboard.model.dto;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-//import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-//@NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Reqres {
+public class RuObject {
 
     private Integer id;
     private String firstName;
     private String lastName;
     private String email;
+    private boolean newReqresData;
 }

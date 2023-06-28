@@ -16,14 +16,14 @@ public class MyReactiveRepositoryAdapter implements UserRepository {
 
     @Override
     public Mono<User> saveUser(User user) {
-//        return repository.save(user);
-        return null;
+        return repository.save(UserMapper.toPersistenceEntity(user))
+                .map(UserMapper::toUser);
     }
 
     @Override
     public Mono<User> findById(Integer id) {
         return repository.findById(id)
-                .doOnNext(userPersistence -> System.out.println(userPersistence))
+//                .doOnNext(userPersistence -> System.out.println(userPersistence))
                 .map(UserMapper::toUser);
     }
 

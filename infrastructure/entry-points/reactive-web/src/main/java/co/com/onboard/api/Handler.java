@@ -2,6 +2,7 @@ package co.com.onboard.api;
 
 import co.com.onboard.model.user.User;
 import co.com.onboard.usecase.user.UserUseCase;
+import co.com.onboard.usecase.user.exceptions.UserFoundException;
 import co.com.onboard.usecase.user.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,17 @@ public class Handler {
 
     private final UserUseCase userUseCase;
 
+    public Mono<ServerResponse> saveUser(ServerRequest serverRequest){
+        Integer id = Integer.parseInt(serverRequest.pathVariable("id"));
+
+        return userUseCase.saveUser(id)
+                .flatMap(userSaved -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(userSaved))
+                .onErrorResume(UserFoundException.class, ErrorHandlingUtils::handleUserFoundException);
+    }
+
     public Mono<ServerResponse> findAllUsersRegistered(ServerRequest serverRequest){
         return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(userUseCase.findAllUsers(), User.class);
     }
-
 
     public Mono<ServerResponse> findUserById(ServerRequest serverRequest) {
         Integer id = Integer.parseInt(serverRequest.pathVariable("id"));
@@ -33,7 +41,6 @@ public class Handler {
                 .flatMap(user -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(user))
                 .onErrorResume(UserNotFoundException.class, ErrorHandlingUtils::handleUserNotFoundException);
     }
-
 
     public Mono<ServerResponse> findUserByItsFirstName(ServerRequest serverRequest) {
         String name = serverRequest.pathVariable("name");

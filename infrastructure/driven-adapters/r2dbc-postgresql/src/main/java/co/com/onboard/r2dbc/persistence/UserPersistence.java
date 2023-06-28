@@ -11,7 +11,6 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-
 @Data
 @Table("users")
 @NoArgsConstructor
@@ -34,4 +33,8 @@ public class UserPersistence implements Persistable<Integer> {
     @Transient
     public boolean isNew;
 
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
 }

@@ -1,45 +1,43 @@
 package co.com.onboard.consumer;
 
+
+import co.com.onboard.model.reqres.gateways.ReqresRepository;
+import co.com.onboard.model.user.User;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
-public class RestConsumer /* implements Gateway from domain */{
+public class RestConsumer implements ReqresRepository {
+
     private final WebClient client;
+    private final Environment environment;
 
+    @Override
+    public Mono<User> findById(Integer id) {
 
-    // these methods are an example that illustrates the implementation of WebClient.
-    // You should use the methods that you implement from the Gateway from the domain.
-    @CircuitBreaker(name = "testGet" /*, fallbackMethod = "testGetOk"*/)
-    public Mono<ObjectResponse> testGet() {
-        return client
-                .get()
+        String reqresApiUrl = environment.getProperty("api.reqres-url");
+
+        return client.get()
+                .uri(reqresApiUrl + "/api/users/{id}", id)
                 .retrieve()
-                .bodyToMono(ObjectResponse.class);
-    }
-
-// Possible fallback method
-//    public Mono<String> testGetOk(Exception ignored) {
-//        return client
-//                .get() // TODO: change for another endpoint or destination
-//                .retrieve()
-//                .bodyToMono(String.class);
-//    }
-
-    @CircuitBreaker(name = "testPost")
-    public Mono<ObjectResponse> testPost() {
-        ObjectRequest request = ObjectRequest.builder()
-            .val1("exampleval1")
-            .val2("exampleval2")
-            .build();
-        return client
-                .post()
-                .body(Mono.just(request), ObjectRequest.class)
-                .retrieve()
-                .bodyToMono(ObjectResponse.class);
+                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                .map(object -> {
+                    Map<String, Object> userData = (Map<String, Object>) object.get("data");
+                    return User.builder()
+                            .id((Integer) userData.get("id"))
+                            .firstName((String) userData.get("first_name"))
+                            .lastName((String) userData.get("last_name"))
+                            .email((String) userData.get("email"))
+                            .build();
+                });
     }
 }

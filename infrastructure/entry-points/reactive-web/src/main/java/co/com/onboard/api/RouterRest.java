@@ -15,7 +15,8 @@ public class RouterRest {
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
         return route(GET("/api/users"), handler::findAllUsersRegistered)
                 .andRoute(GET("/api/user/id/{id}"), handler::findUserById)
-                .andRoute(GET("/api/user/name/{name}"), handler::findUserByItsFirstName);
+                .andRoute(GET("/api/user/name/{name}"), handler::findUserByItsFirstName)
+                .andRoute(POST("/api/user/{id}"), handler::saveUser);
 //                .and(route(GET("/api/otherusercase/path"), handler::listenGETOtherUseCase));
     }
 }

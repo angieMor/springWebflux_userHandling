@@ -1,20 +1,35 @@
 package co.com.onboard.usecase.user;
 
+import co.com.onboard.model.reqres.gateways.ReqresRepository;
 import co.com.onboard.model.user.User;
 import co.com.onboard.model.user.gateways.UserRepository;
+import co.com.onboard.usecase.user.exceptions.UserFoundException;
 import co.com.onboard.usecase.user.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+import java.util.HashMap;
+
+
+
 @RequiredArgsConstructor
 public class UserUseCase {
 
     private final UserRepository userRepository;
+    private final ReqresRepository reqresRepository;
 
     public Mono<User> saveUser(Integer id) {
-        return null;
+        return userRepository.findById(id)
+                .flatMap(userFound -> Mono.<User>error(new UserFoundException("User with name "
+                        + userFound.getFirstName() + " " + userFound.getLastName() + " Already exists")))
+                .switchIfEmpty(
+                        reqresRepository.findById(id)
+                                .flatMap(Mono::just)
+                                .flatMap(userRepository::saveUser)
+                );
     }
 
     public Mono<User> findById(Integer id) {
