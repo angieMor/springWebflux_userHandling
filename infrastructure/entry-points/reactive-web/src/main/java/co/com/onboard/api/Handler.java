@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -26,13 +27,32 @@ public class Handler {
     }
 
 
-    public Mono<ServerResponse> findUserById(ServerRequest request) {
-        Integer id = Integer.parseInt(request.pathVariable("id"));
+    public Mono<ServerResponse> findUserById(ServerRequest serverRequest) {
+        Integer id = Integer.parseInt(serverRequest.pathVariable("id"));
         return userUseCase.findById(id)
                 .flatMap(user -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(user))
                 .onErrorResume(UserNotFoundException.class, ErrorHandlingUtils::handleUserNotFoundException);
     }
 
+
+    public Mono<ServerResponse> findUserByItsFirstName(ServerRequest serverRequest) {
+        String name = serverRequest.pathVariable("name");
+        return userUseCase.findByName(name)
+                .collectList()
+                .flatMap(users -> {
+                    if (users.isEmpty()) {
+                        return Mono.error(new UserNotFoundException(""));
+                    } else {
+                        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(users);
+                    }
+                })
+                .onErrorResume(UserNotFoundException.class, ex -> {
+
+                    return ServerResponse.status(HttpStatus.NOT_FOUND)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(Map.of("error", ex.getMessage()));
+                });
+    }
 
     public Mono<ServerResponse> listenGETOtherUseCase(ServerRequest serverRequest) {
         // useCase2.logic();

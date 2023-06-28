@@ -9,5 +9,5 @@ public interface UserRepository {
     Mono<User> saveUser(User user);
     Mono<User> findById(Integer id);
     Flux<User> findAllUsers();
-    Flux<User> findUsersByName(String name);
+    Flux<User> findByName(String name);
 }

@@ -22,7 +22,9 @@ public class MyReactiveRepositoryAdapter implements UserRepository {
 
     @Override
     public Mono<User> findById(Integer id) {
-        return repository.findById(id).map(UserMapper::toUser);
+        return repository.findById(id)
+                .doOnNext(userPersistence -> System.out.println(userPersistence))
+                .map(UserMapper::toUser);
     }
 
     @Override
@@ -31,8 +33,10 @@ public class MyReactiveRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public Flux<User> findUsersByName(String name) {
-        return null;
+    public Flux<User> findByName(String name) {
+        return Flux.from(repository.findByFirstName(name))
+                .doOnNext(userPersistence -> System.out.println(userPersistence))
+                .map(UserMapper::toUser);
     }
 
 }

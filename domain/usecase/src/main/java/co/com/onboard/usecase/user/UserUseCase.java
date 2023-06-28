@@ -19,14 +19,22 @@ public class UserUseCase {
 
     public Mono<User> findById(Integer id) {
         return userRepository.findById(id)
-                .switchIfEmpty(Mono.error(new UserNotFoundException("User not found")));
+//                .doOnNext(userPersistence -> System.out.println(userPersistence)) // debug print
+                .switchIfEmpty(Mono.error(new UserNotFoundException("User with id '%d' wasn't found".formatted(id))));
     }
 
     public Flux<User> findAllUsers() {
         return userRepository.findAllUsers();
     }
 
-    public Flux<User> findUsersByName(String name) {
-        return null;
+    public Flux<User> findByName(String name) {
+        String lowerCaseName = name.toLowerCase();
+        String capitalizedName =
+                // Capitalize first letter
+                Character.toUpperCase(lowerCaseName.charAt(0))
+                        // Concatenate the substring
+                + lowerCaseName.substring(1);
+        return userRepository.findByName(capitalizedName)
+                .switchIfEmpty(Mono.error(new UserNotFoundException("User with name '%s' wasn't found".formatted(capitalizedName))));
     }
 }
