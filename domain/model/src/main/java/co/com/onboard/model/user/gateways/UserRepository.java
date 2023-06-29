@@ -1,9 +1,9 @@
 package co.com.onboard.model.user.gateways;
 
-import co.com.onboard.model.dto.RuObject;
 import co.com.onboard.model.user.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 
 public interface UserRepository {
 

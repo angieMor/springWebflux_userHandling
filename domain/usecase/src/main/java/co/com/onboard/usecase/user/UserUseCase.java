@@ -47,6 +47,6 @@ public class UserUseCase {
                         // Concatenate the substring
                 + lowerCaseName.substring(1);
         return userRepository.findByName(capitalizedName)
-                .switchIfEmpty(Mono.error(new UserNotFoundException("User with name '%s' wasn't found".formatted(capitalizedName))));
+                .switchIfEmpty(Mono.error(new UserNotFoundException("Users with name '%s' weren't found".formatted(capitalizedName))));
     }
 }
