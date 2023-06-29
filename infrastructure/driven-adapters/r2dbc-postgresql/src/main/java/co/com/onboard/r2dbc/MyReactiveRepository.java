@@ -1,12 +1,9 @@
 package co.com.onboard.r2dbc;
 
-import co.com.onboard.model.user.User;
 import co.com.onboard.r2dbc.persistence.UserPersistence;
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 
 
@@ -14,5 +11,5 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface MyReactiveRepository extends ReactiveCrudRepository<UserPersistence, Integer> {
 
-    Mono<UserPersistence> findByFirstName(String name);
+    Flux<UserPersistence> findAllByFirstName(String name);
 }

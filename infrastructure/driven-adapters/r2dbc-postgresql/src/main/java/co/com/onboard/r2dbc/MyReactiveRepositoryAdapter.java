@@ -33,9 +33,8 @@ public class MyReactiveRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public Flux<User> findByName(String name) {
-        return Flux.from(repository.findByFirstName(name))
-                .doOnNext(userPersistence -> System.out.println(userPersistence))
+    public Flux<User> findAllByName(String name) {
+        return Flux.from(repository.findAllByFirstName(name))
                 .map(UserMapper::toUser);
     }
 

@@ -39,14 +39,14 @@ public class UserUseCase {
         return userRepository.findAllUsers();
     }
 
-    public Flux<User> findByName(String name) {
+    public Flux<User> findAllByName(String name) {
         String lowerCaseName = name.toLowerCase();
         String capitalizedName =
                 // Capitalize first letter
                 Character.toUpperCase(lowerCaseName.charAt(0))
                         // Concatenate the substring
                 + lowerCaseName.substring(1);
-        return userRepository.findByName(capitalizedName)
+        return userRepository.findAllByName(capitalizedName)
                 .switchIfEmpty(Mono.error(new UserNotFoundException("Users with name '%s' weren't found".formatted(capitalizedName))));
     }
 }

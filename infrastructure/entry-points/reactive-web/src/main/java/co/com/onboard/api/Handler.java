@@ -44,7 +44,7 @@ public class Handler {
 
     public Mono<ServerResponse> findUserByItsFirstName(ServerRequest serverRequest) {
         String name = serverRequest.pathVariable("name");
-        return userUseCase.findByName(name)
+        return userUseCase.findAllByName(name)
                 .collectList()
                 .flatMap(users -> {
                     if (users.isEmpty()) {

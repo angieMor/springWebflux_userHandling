@@ -100,11 +100,11 @@ class UserUseCaseTest {
     }
 
     @Test
-    void findByName_ThrowsUserNotFoundException() {
+    void findAllByName_ThrowsUserNotFoundException() {
 
-        given(userRepository.findByName(anyString())).willReturn(Flux.empty());
+        given(userRepository.findAllByName(anyString())).willReturn(Flux.empty());
 
-        Flux<User> result = userUseCase.findByName("Joshua");
+        Flux<User> result = userUseCase.findAllByName("Joshua");
 
         StepVerifier.create(result)
                 .expectError(UserNotFoundException.class)
@@ -113,13 +113,13 @@ class UserUseCaseTest {
     }
 
     @Test
-    void findByName() {
+    void findAllByName() {
         Flux<User> usersFoundByName = DataTestUserUseCase.obtainUsersByName();
         String firstNameUsers = usersFoundByName.elementAt(0).block().getFirstName();
 
-        given(userRepository.findByName(anyString())).willReturn(usersFoundByName);
+        given(userRepository.findAllByName(anyString())).willReturn(usersFoundByName);
 
-        Flux<User> result = userUseCase.findByName(firstNameUsers);
+        Flux<User> result = userUseCase.findAllByName(firstNameUsers);
 
         StepVerifier.create(result)
                 .expectNextCount(usersFoundByName.collectList().blockOptional().orElseThrow().size())
