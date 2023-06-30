@@ -60,15 +60,4 @@ public class Handler {
                             .bodyValue(Map.of("error", ex.getMessage()));
                 });
     }
-
-    public Mono<ServerResponse> listenGETOtherUseCase(ServerRequest serverRequest) {
-        // useCase2.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
-
-    public Mono<ServerResponse> listenPOSTUseCase(ServerRequest serverRequest) {
-        // usecase.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
-
 }
