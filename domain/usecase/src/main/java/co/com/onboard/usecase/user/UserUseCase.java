@@ -2,6 +2,7 @@ package co.com.onboard.usecase.user;
 
 import co.com.onboard.model.user.gateways.ReqresRepository;
 import co.com.onboard.model.user.User;
+import co.com.onboard.model.user.gateways.SqsRepository;
 import co.com.onboard.model.user.gateways.UserRepository;
 import co.com.onboard.usecase.user.exceptions.UserFoundException;
 import co.com.onboard.usecase.user.exceptions.UserNotFoundException;
@@ -16,6 +17,7 @@ public class UserUseCase {
 
     private final UserRepository userRepository;
     private final ReqresRepository reqresRepository;
+    private final SqsRepository sqsRepository;
 
     public Mono<User> saveUser(Integer id) {
         return userRepository.findById(id)
@@ -26,6 +28,7 @@ public class UserUseCase {
                         reqresRepository.findById(id)
                                 .flatMap(Mono::just)
                                 .flatMap(userRepository::saveUser)
+                                .flatMap(user -> sqsRepository.sendUserToQueue(user).thenReturn(user))
                 );
     }
 

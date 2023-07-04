@@ -51,7 +51,18 @@ resilience4j:
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
 aws:
-  region: "us-east-1"
+  region: "us-east-2"
   secretName: "my-secret"
 api:
   reqres-url: "https://reqres.in"
+entrypoint:
+  sqs:
+    accessKey: "AKIA4SOSB3RIKWTF5YSE"
+    secretKey: "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"
+    region: "us-east-2"
+    endpoint: "https://sqs.us-east-2.amazonaws.com"
+    queueUrl: "https://sqs.us-east-2.amazonaws.com/864265821264/onboarding-queue"
+    waitTimeSeconds: 20
+    maxNumberOfMessages: 10
+    visibilityTimeout: 10000
+    numberOfThreads: 1
