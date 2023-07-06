@@ -15,6 +15,10 @@ adapter:
   restconsumer:
     timeout: 5000
     url: "http://localhost:8080"
+  sqs:
+    region: "us-east-1"
+    queueUrl: "http://localhost:4566/000000000000/sample"
+    endpoint: "http://localhost:4566 # For localstack only"
 management:
   health:
     circuitbreakers:
@@ -53,6 +57,12 @@ cors:
 aws:
   region: "us-east-2"
   secretName: "my-secret"
+  dynamodb:
+    endpoint: "https://dynamodb.us-east-2.amazonaws.com"
+    threads: "10"
+    region: "us-east-2"
+    dynamo_accessKey: "AKIA4SOSB3RIA6E7BVKG"
+    dynamo_secretKey: "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"
 api:
   reqres-url: "https://reqres.in"
 entrypoint:

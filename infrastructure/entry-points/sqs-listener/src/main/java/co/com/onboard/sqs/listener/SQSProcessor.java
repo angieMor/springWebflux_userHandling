@@ -1,19 +1,13 @@
 package co.com.onboard.sqs.listener;
 
 import co.com.onboard.model.user.User;
-import co.com.onboard.model.user.gateways.SqsRepository;
-import co.com.onboard.sqs.listener.config.SQSProperties;
-import co.com.onboard.usecase.user.exceptions.TechnicalException;
+import co.com.onboard.usecase.user.UserUseCase;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import software.amazon.awssdk.services.sqs.SqsAsyncClient;
-
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
-import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import software.amazon.awssdk.services.sqs.model.Message;
 
 import java.util.function.Function;
 
@@ -21,38 +15,22 @@ import java.util.function.Function;
 @Slf4j
 @AllArgsConstructor
 
-public class SQSProcessor implements SqsRepository {
+public class SQSProcessor implements Function<Message, Mono<Void>> {
 
-    private final SQSProperties properties;
-    private final SqsAsyncClient client;
-    private final ObjectMapper objectMapper;
+private final UserUseCase userUseCase;
+private final ObjectMapper objectMapper;
 
-    @Override
-    public Mono<String> sendUserToQueue(User user) {
+@Override
+public Mono<Void> apply(Message message) {
+        log.info("Mensaje recibido con la información {}", message.body());
         try {
-            return this.send(objectMapper.writeValueAsString(user));
+            System.out.println("Paso 2");
+            User user = objectMapper.readValue(message.body(), User.class);
+            System.out.println(user);
+            return userUseCase.saveDynamoData(user).then();
         } catch (Exception e) {
-            return Mono.error(new TechnicalException(e));
+            log.error("Se ha presentado un error leyendo el evento de creacion de usuario", e);
+            return Mono.error(e);
         }
     }
-
-    private Mono<String> send(String message) {
-        return Mono.fromCallable(() -> buildRequest(message))
-                .flatMap(request -> Mono.fromFuture(client.sendMessage(request)))
-                .doOnNext(p -> System.out.println(message + "Response: " + p.messageId()))
-                .onErrorResume(e -> {
-                    System.out.println("Error: " + message);
-                    return Mono.empty();
-                })
-                .map(SendMessageResponse::messageId);
-    }
-
-    private SendMessageRequest buildRequest(String message) {
-        return SendMessageRequest.builder()
-                .queueUrl(properties.getQueueUrl())
-                .messageBody(message)
-                .build();
-    }
-
-
 }

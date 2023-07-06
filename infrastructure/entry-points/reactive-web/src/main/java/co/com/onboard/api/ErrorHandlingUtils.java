@@ -1,7 +1,7 @@
 package co.com.onboard.api;
 
-import co.com.onboard.usecase.user.exceptions.UserFoundException;
-import co.com.onboard.usecase.user.exceptions.UserNotFoundException;
+import co.com.onboard.model.user.exceptions.UserFoundException;
+import co.com.onboard.model.user.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.server.ServerResponse;

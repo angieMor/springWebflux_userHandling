@@ -1,11 +1,12 @@
 package co.com.onboard.usecase.user;
 
+import co.com.onboard.model.user.gateways.DynamoRepository;
 import co.com.onboard.model.user.gateways.ReqresRepository;
 import co.com.onboard.model.user.User;
 import co.com.onboard.model.user.gateways.SqsRepository;
 import co.com.onboard.model.user.gateways.UserRepository;
-import co.com.onboard.usecase.user.exceptions.UserFoundException;
-import co.com.onboard.usecase.user.exceptions.UserNotFoundException;
+import co.com.onboard.model.user.exceptions.UserFoundException;
+import co.com.onboard.model.user.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import reactor.core.publisher.Flux;
@@ -18,6 +19,7 @@ public class UserUseCase {
     private final UserRepository userRepository;
     private final ReqresRepository reqresRepository;
     private final SqsRepository sqsRepository;
+    private final DynamoRepository dynamoRepository;
 
     public Mono<User> saveUser(Integer id) {
         return userRepository.findById(id)
@@ -51,5 +53,9 @@ public class UserUseCase {
                 + lowerCaseName.substring(1);
         return userRepository.findAllByName(capitalizedName)
                 .switchIfEmpty(Mono.error(new UserNotFoundException("Users with name '%s' weren't found".formatted(capitalizedName))));
+    }
+
+    public Mono<User> saveDynamoData(User user) {
+        return dynamoRepository.save(user).thenReturn(user);
     }
 }

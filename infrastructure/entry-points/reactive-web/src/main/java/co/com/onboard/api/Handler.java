@@ -2,18 +2,16 @@ package co.com.onboard.api;
 
 import co.com.onboard.model.user.User;
 import co.com.onboard.usecase.user.UserUseCase;
-import co.com.onboard.usecase.user.exceptions.UserFoundException;
-import co.com.onboard.usecase.user.exceptions.UserNotFoundException;
+import co.com.onboard.model.user.exceptions.UserFoundException;
+import co.com.onboard.model.user.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Component

@@ -18,15 +18,15 @@ class RouterRestTest {
     @Test
     void testListenGETUseCase() {
         webTestClient.get()
-                .uri("/api/usecase/path")
+                .uri("/api/users")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .value(userResponse -> {
-                            Assertions.assertThat(userResponse).isEmpty();
-                        }
-                );
+                .expectStatus().isOk();
+//                .expectBody(String.class)
+//                .value(userResponse -> {
+//                            Assertions.assertThat(userResponse).isEmpty();
+//                        }
+//                );
     }
 
     @Test

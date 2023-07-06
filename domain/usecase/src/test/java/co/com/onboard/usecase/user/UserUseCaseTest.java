@@ -2,10 +2,11 @@ package co.com.onboard.usecase.user;
 
 import co.com.onboard.model.user.User;
 import co.com.onboard.model.user.gateways.ReqresRepository;
+import co.com.onboard.model.user.gateways.SqsRepository;
 import co.com.onboard.model.user.gateways.UserRepository;
-import co.com.onboard.usecase.user.exceptions.UserFoundException;
+import co.com.onboard.model.user.exceptions.UserFoundException;
 
-import co.com.onboard.usecase.user.exceptions.UserNotFoundException;
+import co.com.onboard.model.user.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +32,9 @@ class UserUseCaseTest {
     @Mock
     ReqresRepository reqresRepository;
 
+    @Mock
+    SqsRepository sqsRepository;
+
     @Test
     void saveUser_ThrowUserFoundException() {
         User user = DataTestUserUseCase.obtainUser();
@@ -52,13 +56,14 @@ class UserUseCaseTest {
         given(userRepository.findById(anyInt())).willReturn(Mono.empty());
         given(reqresRepository.findById(anyInt())).willReturn(Mono.just(user));
         given(userRepository.saveUser(any(User.class))).willReturn(Mono.just(user));
+        given(sqsRepository.sendUserToQueue(any(User.class))).willReturn(Mono.empty());
+
 
         Mono<User> result = userUseCase.saveUser(user.getId());
 
         StepVerifier.create(result)
                 .expectNext(user)
                 .verifyComplete();
-
     }
 
     @Test

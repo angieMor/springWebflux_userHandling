@@ -29,57 +29,41 @@ import static org.mockito.Mockito.verify;
 @ContextConfiguration(classes = {RouterRest.class, Handler.class})
 class HandlerTest {
 
-//    @Autowired
-//    private ApplicationContext applicationContext;
-//    @MockBean
-//    private UserUseCase userUseCase;
-//    private WebTestClient webTestClient;
-
-//    @InjectMocks
-//    private Handler handler;
-//    @Mock
-//    private UserUseCase userUseCase;
-//    private WebTestClient webTestClient;
-//    @BeforeEach
-//    void setUp() {
-////        webTestClient = WebTestClient.bindToRouterFunction(RouterRest.router(handler)).build();
-//        RouterFunction<ServerResponse> routerFunction = RouterRest.routerFunction(handler);
-//        webTestClient = WebTestClient.bindToRouterFunction(routerFunction).build();
-//    }
-
-    @Mock
+    @Autowired
+    private ApplicationContext applicationContext;
+    @MockBean
     private UserUseCase userUseCase;
-
-    @InjectMocks
-    private Handler handler;
-
     private WebTestClient webTestClient;
 
     @BeforeEach
     void setUp() {
-        webTestClient = WebTestClient.bindToRouterFunction(RouterRest.routerFunction(handler)).build();
+        webTestClient = WebTestClient
+                .bindToApplicationContext(applicationContext)
+                .configureClient()
+                .build();
     }
 
-//    @Test
-//    void saveUser() {
-//        Integer id = 6;
-//        User user = DataTestHandler.obtainUser();
-//
-//        given(userUseCase.saveUser(id)).willReturn(Mono.just(user));
-//
-//
-//        webTestClient.post()
-//                .uri("/api/user/{id}", id)
-//                .exchange()
-//                .expectStatus().isOk();
-////                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-////                .expectBody()
-////                .jsonPath("$.id").isEqualTo(id);
-////                .jsonPath("$.name").isEqualTo("John Doe");
-//
-//
-//        verify(userUseCase).saveUser(id);
-//    }
+
+    @Test
+    void saveUser() {
+        Integer id = 1;
+        User user = DataTestHandler.obtainUser();
+
+        given(userUseCase.saveUser(id)).willReturn(Mono.just(user));
+
+
+        webTestClient.post()
+                .uri("/api/user/{id}", id)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$.id").isEqualTo(id)
+                .jsonPath("$.firstName").isEqualTo("John");
+
+
+        verify(userUseCase).saveUser(id);
+    }
 
     @Test
     void findAllUsersRegistered() {

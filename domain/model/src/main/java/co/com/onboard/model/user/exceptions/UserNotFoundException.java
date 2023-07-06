@@ -1,4 +1,4 @@
-package co.com.onboard.usecase.user.exceptions;
+package co.com.onboard.model.user.exceptions;
 
 public class UserNotFoundException extends RuntimeException{
 
