@@ -5,9 +5,6 @@ import co.com.onboard.usecase.user.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,10 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.server.RouterFunction;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -63,17 +57,5 @@ class HandlerTest {
 
 
         verify(userUseCase).saveUser(id);
-    }
-
-    @Test
-    void findAllUsersRegistered() {
-    }
-
-    @Test
-    void findUserById() {
-    }
-
-    @Test
-    void findUserByItsFirstName() {
     }
 }
